@@ -20,6 +20,8 @@ extension View {
 struct ContentView: View {
 	let resorts: [Resort] = Bundle.main.decode("resorts.json")
 	
+	@StateObject var favorites = Favorites()
+	
 	@State private var searchedText = ""
 	
 	var filteredResorts: [Resort] {
@@ -36,22 +38,31 @@ struct ContentView: View {
 				NavigationLink {
 					ResortView(resort: resort)
 				} label: {
-					Image(resort.country)
-						.resizable()
-						.scaledToFill()
-						.frame(width: 50, height: 30)
-						.clipShape(RoundedRectangle(cornerRadius: 5))
-						.overlay(RoundedRectangle(cornerRadius: 5)
-							.stroke(lineWidth: 1)
-						)
-					VStack(alignment: .leading) {
-						Text(resort.name)
-							.font(.headline)
-						Text("\(resort.runs) runs")
-						foregroundColor(.secondary)
+					HStack {
+						Image(resort.country)
+							.resizable()
+							.scaledToFill()
+							.frame(width: 50, height: 30)
+							.clipShape(RoundedRectangle(cornerRadius: 5))
+							.overlay(RoundedRectangle(cornerRadius: 5)
+								.stroke(lineWidth: 1)
+							)
+						VStack(alignment: .leading) {
+							Text(resort.name)
+								.font(.headline)
+							Text("\(resort.runs) runs")
+								.foregroundColor(.secondary)
+						}
+						
+						if favorites.contains(resort) {
+							Spacer()
+							Image(systemName: "heart.fill")
+								.accessibilityLabel("This is the favorite resort")
+								.foregroundColor(.red)
+						}
 					}
 				}
-				.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+//				.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
 
 			}
 			.navigationTitle("Resorts")
@@ -59,7 +70,8 @@ struct ContentView: View {
 			WelcomeView()
 		}
 		.searchable(text: $searchedText, prompt: "Search for resorts")
-		.phoneOnlyNavigationView()
+		.environmentObject(favorites)
+//		.phoneOnlyNavigationView()
     }
 }
 
