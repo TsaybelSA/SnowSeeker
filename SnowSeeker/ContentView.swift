@@ -51,6 +51,8 @@ struct ContentView: View {
 						foregroundColor(.secondary)
 					}
 				}
+				.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+
 			}
 			.navigationTitle("Resorts")
 			

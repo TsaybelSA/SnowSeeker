@@ -11,6 +11,10 @@ struct ResortView: View {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@Environment(\.dynamicTypeSize) var dynamicTypeSize
 	let resort: Resort
+	
+	@State private var selectedFacility: Facility?
+	@State private var isShowingAlert = false
+	
     var body: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: 0) {
@@ -34,16 +38,29 @@ struct ResortView: View {
 					Text(resort.description)
 						.padding(.vertical)
 					Text("Facilities:")
-						.font(.headline.bold())
-					Text(resort.facilities.joined(separator: ", "))
-						.font(.body)
-						.padding(.vertical)
+						.font(.title3.bold())
+					HStack(spacing: 15) {
+						ForEach(resort.facilitiesList) { facility in
+							Button {
+								selectedFacility = facility
+								isShowingAlert = true
+							} label: {
+								Text(facility.icon)
+									.font(.largeTitle)
+							}
+						}
+					}
+					.padding(.vertical)
 				}
 				.padding(.horizontal)
 			}
 		}
 		.navigationTitle("\(resort.name), \(resort.country)")
 		.navigationBarTitleDisplayMode(.inline)
+		.alert(selectedFacility?.name ?? "More Information", isPresented: $isShowingAlert, presenting: selectedFacility) { _ in
+		} message: { facility in
+			Text(facility.description)
+		}
 	}
 }
 
