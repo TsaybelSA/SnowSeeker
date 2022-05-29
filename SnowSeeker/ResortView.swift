@@ -20,10 +20,24 @@ struct ResortView: View {
     var body: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: 0) {
-				Image(decorative: resort.id)
-					.resizable()
-					.scaledToFit()
-				
+				ZStack {
+					Image(decorative: resort.id)
+						.resizable()
+						.scaledToFit()
+					HStack {
+						Spacer()
+						VStack {
+							Spacer()
+							Text(resort.imageCredit)
+								.font(.caption)
+								.padding(7)
+								.foregroundColor(.white)
+								.background(.black.opacity(0.6))
+								.clipShape(Capsule())
+								.padding(5)
+						}
+					}
+				}
 				HStack {
 					if horizontalSizeClass == .compact && dynamicTypeSize > .xLarge {
 						VStack(spacing: 10) { ResortDetailsView(resort: resort) }
@@ -79,5 +93,6 @@ struct ResortView: View {
 struct ResortView_Previews: PreviewProvider {
     static var previews: some View {
 		ResortView(resort: Resort.example)
+			.environmentObject(Favorites())
     }
 }
